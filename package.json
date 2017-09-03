@@ -1,0 +1,17 @@
+{
+  "name": "mba-mondays",
+  "version": "1.0.0",
+  "description": " ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fred",
+    "wilson",
+    "mba",
+    "monday"
+  ],
+  "author": "Cameron Porter",
+  "license": "MIT"
+}
