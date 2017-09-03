@@ -3,7 +3,6 @@
  */
 
 var _ = require('underscore')
-  , axios = require('axios')
   , JSDOM = require('jsdom').JSDOM
   , links = require('./links.json')
 
@@ -87,13 +86,11 @@ function markSent(link) {
  */
 
 function fetchLinks() {
-  var prom = axios(ARCHIVE)
-    .then((res) => {
-      var archive = res.data
-        , dom = new JSDOM(archive)
-        , listLinks = dom.window.document.querySelector(`${LIST}`).childNodes
+  var prom = JSDOM.fromURL(ARCHIVE)
+    .then((dom) => {
+        var items = dom.window.document.querySelector(`${LIST}`).childNodes
         // fetch and convert links to an array with data
-        , allLinks = [...listLinks].map((item) => {
+        , allLinks = [...items].map((item) => {
           var anchor = item.querySelector('a')
             , link = anchor.href
             , title = anchor.title
