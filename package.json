@@ -4,7 +4,8 @@
   "description": " ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [
     "fred",
@@ -13,5 +14,9 @@
     "monday"
   ],
   "author": "Cameron Porter",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nodemailer": "^4.1.0",
+    "underscore": "^1.8.3"
+  }
 }
