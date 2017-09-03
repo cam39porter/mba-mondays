@@ -16,14 +16,16 @@ const LIST = '.lcp_catlist'
 /**
  * Write a New Link
  * 
- * @param {String} link
+ * @param {Object} link { title, link }
  * @return {Promise} fulfills if link has been successfully written
  */
 
-function writeLink(link) {
-  var data = {
+function writeLink(linkData) {
+  var link = linkData.link
+    , data = {
     created: new Date().toDateString
   , sent: false
+  , title: linkData.title
   }
 
   links[link] = data
@@ -111,7 +113,20 @@ function fetchLinks() {
  */
 
 function updateLinks() {
-  // TODO
+  var prom = fetchLinks()
+    .then((fetchedLinks) => {
+      /* Check if each link is the DB and add the ones that are not */
+      var newLinks = fetchedLinks.reduce((ls, l) => {
+        if (hasLink(l.link)) return ls
+        return ls.concat(l)
+      }, [])
+
+      return Promise.all(newLinks.map((linkData) => {
+        return writeLink(linkData)
+      }))
+    })
+  
+  return prom
 }
 
 /**
