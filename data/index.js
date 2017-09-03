@@ -3,7 +3,16 @@
  */
 
 var _ = require('underscore')
+  , axios = require('axios')
+  , JSDOM = require('jsdom').JSDOM
   , links = require('./links.json')
+
+/*!
+ * Constants
+ */
+
+const ARCHIVE = 'http://avc.com/archive/#mba_mondays_archive'
+const LIST = '.lcp_catlist'
 
 /**
  * Write a New Link
@@ -13,18 +22,40 @@ var _ = require('underscore')
  */
 
 function writeLink(link) {
-  // TODO 
+  var data = {
+    created: new Date().toDateString
+  , sent: false
+  }
+
+  links[link] = data
+
+  return Promise.resolve({ [link]: data })
 }
 
 /**
  * Check if link has already been added 
  * 
  * @param {String} link
- * @return {Boolean} true if the link has already been added
+ * @return {Promise} fulfills if the link has already been added
  */
 
 function hasLink(link) {
-  // TODO 
+  return links[link] ? true : false
+}
+
+/**
+ * Get link data
+ * 
+ * @param {String} link
+ * @return {Promise} fulfills if the link is fetched
+ */
+
+function getData(link) {
+  var data = links[link]
+
+  if (data) return Promise.resolve({ [link]: data })
+  
+  return Promise.reject(new Error(`Link (${link}) is not in the database`))
 }
 
 /**
@@ -35,7 +66,7 @@ function hasLink(link) {
  */
 
 function getBody(link) {
-  // TODO
+  return axios(link)
 }
 
 /**
@@ -56,7 +87,24 @@ function markSent(link) {
  */
 
 function fetchLinks() {
-  // TODO 
+  var prom = axios(ARCHIVE)
+    .then((res) => {
+      var archive = res.data
+        , dom = new JSDOM(archive)
+        , listLinks = dom.window.document.querySelector(`${LIST}`).childNodes
+        // fetch and convert links to an array with data
+        , allLinks = [...listLinks].map((item) => {
+          var anchor = item.querySelector('a')
+            , link = anchor.href
+            , title = anchor.title
+
+          return { link, title }
+        })
+      
+      return allLinks
+    })
+
+  return prom
 }
 
 /**
@@ -67,6 +115,16 @@ function fetchLinks() {
 
 function updateLinks() {
   // TODO
+}
+
+/**
+ * Save database. This needs to be called at the end of session of DB updates
+ * 
+ * @return {Promise} fulfills if DB is successfully saved
+ */
+
+function save() {
+  // TODO 
 }
 
 /*!

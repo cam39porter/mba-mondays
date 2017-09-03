@@ -16,6 +16,8 @@
   "author": "Cameron Porter",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.2",
+    "jsdom": "^11.2.0",
     "nodemailer": "^4.1.0",
     "underscore": "^1.8.3"
   }
